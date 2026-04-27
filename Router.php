@@ -56,6 +56,19 @@ class Router {
     }
 
     /**
+     * Load error page
+     * 
+     * @param int $httpCode
+     * 
+     * @return void
+     */
+    public function error($httpCode = 404) {
+        http_response_code($httpCode);
+        loadView("error/{$httpCode}");
+        exit;
+    }
+
+    /**
      * Route the request
      * 
      * @param string $uri
@@ -69,8 +82,7 @@ class Router {
                 return;
             }
         }
-        http_response_code(404);
-        loadView('error/404');
-        exit;
+
+        $this->error();
     }
 }
