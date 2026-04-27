@@ -43,3 +43,32 @@ function loadPartial($name) {
         echo "Partial {$name} not found.";
     }
 }
+
+/**
+ * Inspect a value(s)
+ * 
+ * @param mixed $value
+ * @return void
+ */
+function inspectAnd(...$value) {
+    echo '<pre>';
+    foreach($value as $v) {
+        var_dump($v);
+    }
+    echo '</pre>';
+}
+
+/**
+ * Inspect a value(s) and die
+ * 
+ * @param mixed $value
+ * @return void
+ */
+function inspectAndDie(...$value) {
+    echo '<pre>';
+    foreach($value as $v) {
+        var_dump($v);
+    }
+    echo '</pre>';
+    die();
+}
