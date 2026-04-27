@@ -1,7 +1,7 @@
-<?php require loadPartial('head'); ?>
-<?php require loadPartial('navbar'); ?>
-<?php require loadPartial('showcase'); ?>
-<?php require loadPartial('top-banner'); ?>
+<?= loadPartial('head') ?>
+<?= loadPartial('navbar') ?>
+<?= loadPartial('showcase') ?>
+<?= loadPartial('top-banner') ?>
 
     <!-- Job Listings -->
     <section>
@@ -187,11 +187,11 @@
             </div>
           </div>
         </div>
-        <a href="listings.html" class="block text-xl text-center">
+        <a href="/listings" class="block text-xl text-center">
           <i class="fa fa-arrow-alt-circle-right"></i>
           Show All Jobs
         </a>
       </section>
 
-<?php require loadPartial('bottom-banner'); ?>
-<?php require loadPartial('footer'); ?>
+<?= loadPartial('bottom-banner') ?>
+<?= loadPartial('footer') ?>

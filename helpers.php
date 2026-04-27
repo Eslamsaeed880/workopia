@@ -38,7 +38,7 @@ function loadPartial($name) {
     $partialPath = basePath("views/partials/{$name}.php");
 
     if(file_exists($partialPath)) {
-        return $partialPath;
+        require $partialPath;
     } else {
         echo "Partial {$name} not found.";
     }
@@ -50,7 +50,7 @@ function loadPartial($name) {
  * @param mixed $value
  * @return void
  */
-function inspectAnd(...$value) {
+function inspect(...$value) {
     echo '<pre>';
     foreach($value as $v) {
         var_dump($v);
