@@ -1,0 +1,19 @@
+{
+    "name": "eslam/workopia",
+    "description": "A simple PHP listing applications.",
+    "author": [
+        {
+            "name": "Eslam Saeed",
+            "email": "eslamsaeed298@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Framework\\": "Framework/",
+            "App\\": "App/"
+        }
+    },
+    "require": {
+        "monolog/monolog": "^3.10"
+    }
+}
