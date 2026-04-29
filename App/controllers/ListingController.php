@@ -112,4 +112,18 @@ class ListingController {
             redirect('/listings');
         }
     }
+
+    /**
+     * Delete a listing
+     *
+     * @param array $params
+     * @return void
+     */
+    public function destroy($params) {
+        $id = $params['id'];
+        
+        $this->db->query('DELETE FROM listings WHERE id = :id', ['id' => $id]);
+
+        redirect('/listings');
+    }
 }
