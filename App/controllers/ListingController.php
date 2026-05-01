@@ -4,6 +4,8 @@ namespace App\controllers;
 
 use Framework\Database;
 use Framework\Validation;
+use Framework\Session;
+use Framework\Authorization;  
 
 class ListingController {
     protected $db;
@@ -15,7 +17,7 @@ class ListingController {
     }
 
     public function index() {
-        $listings = $this->db->query("SELECT * FROM listings")->fetchAll();
+        $listings = $this->db->query("SELECT * FROM listings ORDER BY created_at DESC")->fetchAll();
 
         loadView('listings/index', [
             'listings' => $listings
@@ -59,7 +61,7 @@ class ListingController {
         $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
 
         // Attach currently-authenticated user id (placeholder until auth added)
-        $newListingData['user_id'] = 1;
+        $newListingData['user_id'] = Session::get('user')['id'];
 
         // Sanitize all incoming values
         $newListingData = array_map('sanitize', $newListingData);
@@ -109,6 +111,8 @@ class ListingController {
 
             $this->db->query($query, $newListingData);
 
+            Session::setFlashMessage('success_message', 'Listing deleted successfully.');
+
             redirect('/listings');
         }
     }
@@ -122,10 +126,25 @@ class ListingController {
     public function destroy($params) {
         $id = $params['id'];
         
+        $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', ['id' => $id])->fetch();
+
+        // Check if listing exists
+        if (!$listing) {
+            ErrorController::notFound('Listing not found');
+            return;
+        }
+
+        // Authorization check
+        if(!Authorization::isOwner($listing['user_id'])) {
+            Session::setFlashMessage('error_message', 'You are not authorized to delete this listing.');
+            redirect('/listings/' . $id);
+            return;
+        }
+
         $this->db->query('DELETE FROM listings WHERE id = :id', ['id' => $id]);
 
         // Set a flash message for successful deletion (placeholder until flash messages added)
-        $_SESSION['success_message'] = 'Listing deleted successfully.';
+        Session::setFlashMessage('success_message', 'Listing deleted successfully.');
 
         redirect('/listings');
     }
@@ -217,7 +236,7 @@ class ListingController {
 
             $this->db->query($query, array_merge($updatedValues, ['id' => $id]));
 
-            $_SESSION['success_message'] = 'Listing updated successfully.';
+            Session::setFlashMessage('success_message', 'Listing updated successfully.');
 
             redirect('/listings/' . $id);
         }
