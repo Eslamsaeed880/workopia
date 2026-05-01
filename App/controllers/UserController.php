@@ -130,18 +130,74 @@ class UserController {
 
     }
 
-     /**
-      * Logout a user and kill session
-      *
-      * @return void
-      */
-     public function logout() {
-        Session::clearAll();
+    /**
+     * Logout a user and kill session
+     *
+     * @return void
+     */
+    public function logout() {
+    Session::clearAll();
 
-        $params = session_get_cookie_params();
-        setcookie('PHPSESSID', '', time() - 86400, $params['path'], $params['domain']);
+    $params = session_get_cookie_params();
+    setcookie('PHPSESSID', '', time() - 86400, $params['path'], $params['domain']);
+
+    redirect('/');
+
+    }
+
+    /**
+     * Authenticate user and create session
+     * 
+     * @return void
+     */
+    public function authenticate() {
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+
+        $errors = [];
+
+        if(!Validation::email($email)) {
+            $errors['email'] = 'Please enter a valid email address';
+        }
+
+        if(!Validation::string($password, 6, 50)) {
+            $errors['password'] = 'Password must be between 6 and 50 characters';
+        }
+
+        if(!empty($errors)) {
+            loadView('users/login', [
+                'errors' => $errors,
+                'user' => [
+                    'email' => $email
+                ]
+            ]);
+            exit;
+        }
+
+        $param = [
+            'email' => $email
+        ];
+
+        $user = $this->db->query('SELECT * FROM users WHERE email = :email', $param)->fetch();
+
+        if(!$user || !password_verify($password, $user['password'])) {
+            $errors['credentials'] = 'Invalid email or password';
+
+            loadView('users/login', [
+                'errors' => $errors,
+                'user' => [
+                    'email' => $email
+                ]
+            ]);
+            exit;
+        }
+
+        Session::set('user', [
+            'id' => $user['id'],
+            'name' => $user['name'],
+            'email' => $user['email']
+        ]);
 
         redirect('/');
-
-     }
+    }
 }
