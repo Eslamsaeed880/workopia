@@ -9,7 +9,7 @@ class UserController {
     protected $db;
 
     public function __construct() {
-        $config = require basePath('config/database.php');
+        $config = require basePath('config/db.php');
         $this->db = new Database($config);
     }
 
@@ -19,7 +19,7 @@ class UserController {
      * @return void
      */
     public function login() {
-        loadView('user/login');
+        loadView('users/login');
     }
 
     /**
@@ -28,6 +28,6 @@ class UserController {
      * @return void
      */
     public function create() {
-        loadView('user/create');
+        loadView('users/create');
     }
 }
